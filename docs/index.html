@@ -209,6 +209,41 @@
         .api-status.connected { background: var(--success-dim); color: var(--success); }
         .api-status.disconnected { background: var(--danger-dim); color: var(--danger); }
 
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+            animation: fadeUp 0.6s ease-out 0.15s both;
+        }
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
+            transition: var(--transition);
+        }
+        .stat-card:hover {
+            border-color: var(--border-accent);
+            transform: translateY(-2px);
+        }
+        .stat-label {
+            font-size: 12px;
+            color: var(--fg-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 8px;
+        }
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            font-family: 'DM Sans', sans-serif;
+        }
+        .stat-value.accent { color: var(--accent); }
+        .stat-value.success { color: var(--success); }
+        .stat-value.danger { color: var(--danger); }
+        .stat-value.muted { color: var(--fg-muted); }
+
         @media (max-width: 768px) {
             .app { padding: 20px 16px; }
             header h1 { font-size: 24px; }
@@ -219,6 +254,7 @@
             .modal { padding: 24px; }
             .api-config-bar { flex-wrap: wrap; }
             .api-config-bar input { max-width: 100%; order: 2; flex-basis: 100%; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
         }
     </style>
 </head>
@@ -237,6 +273,25 @@
             </div>
             <p>Student Information Management System</p>
         </header>
+
+        <div class="stats-grid" id="statsGrid">
+            <div class="stat-card">
+                <div class="stat-label">学生总数</div>
+                <div class="stat-value accent" id="statTotal">-</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">平均年龄</div>
+                <div class="stat-value success" id="statAvgAge">-</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">未成年</div>
+                <div class="stat-value danger" id="statMinor">-</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">已成年</div>
+                <div class="stat-value muted" id="statAdult">-</div>
+            </div>
+        </div>
 
         <div class="toolbar">
             <div class="search-box">
@@ -485,7 +540,7 @@
                 if (editId) res = await fetch(`${getAPI()}/${editId}`, { method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body) });
                 else res = await fetch(getAPI(), { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body) });
                 const json = await res.json();
-                if (json.code === 200) { showToast(editId ? '修改成功' : '新增成功'); closeFormModal(); fetchStudents(); }
+                if (json.code === 200) { showToast(editId ? '修改成功' : '新增成功'); closeFormModal(); fetchStudents(); fetchStats(); }
                 else showToast(json.message || '操作失败', 'error');
             } catch (e) { showToast('网络请求失败', 'error'); }
         }
@@ -498,7 +553,7 @@
             try {
                 const res = await fetch(`${getAPI()}/${deleteTargetId}`, { method:'DELETE' });
                 const json = await res.json();
-                if (json.code === 200) { showToast('删除成功'); closeConfirmModal(); fetchStudents(); }
+                if (json.code === 200) { showToast('删除成功'); closeConfirmModal(); fetchStudents(); fetchStats(); }
                 else showToast(json.message || '删除失败', 'error');
             } catch (e) { showToast('网络请求失败', 'error'); }
         }
@@ -507,7 +562,23 @@
         document.getElementById('confirmModal').addEventListener('click', e => { if (e.target===e.currentTarget) closeConfirmModal(); });
         document.addEventListener('keydown', e => { if (e.key==='Escape') { closeFormModal(); closeConfirmModal(); }});
 
+        async function fetchStats() {
+            try {
+                let base = apiInput.value.trim().replace(/\/+$/, '');
+                if (!base) base = '';
+                const res = await fetch(base + '/api/stats');
+                const json = await res.json();
+                if (json.code === 200 && json.data) {
+                    document.getElementById('statTotal').textContent = json.data.totalStudents || 0;
+                    document.getElementById('statAvgAge').textContent = json.data.averageAge ? json.data.averageAge.toFixed(1) : '-';
+                    document.getElementById('statMinor').textContent = json.data.minorCount || 0;
+                    document.getElementById('statAdult').textContent = json.data.adultCount || 0;
+                }
+            } catch (e) {}
+        }
+
         fetchStudents();
+        fetchStats();
         checkConnection();
     </script>
 </body>
