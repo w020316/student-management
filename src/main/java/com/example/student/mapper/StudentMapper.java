@@ -25,4 +25,16 @@ public interface StudentMapper {
 
     @Select("SELECT COUNT(*) FROM student WHERE name LIKE CONCAT('%',#{name},'%')")
     int selectCountByName(@Param("name") String name);
+
+    @Select("SELECT COUNT(*) FROM student WHERE email = #{email}")
+    int countByEmail(@Param("email") String email);
+
+    @Select("SELECT COUNT(*) FROM student WHERE email = #{email} AND id != #{excludeId}")
+    int countByEmailExcludeId(@Param("email") String email, @Param("excludeId") Long excludeId);
+
+    @Delete("<script>DELETE FROM student WHERE id IN <foreach collection='ids' item='id' open='(' separator=',' close=')'>#{id}</foreach></script>")
+    int batchDelete(@Param("ids") List<Long> ids);
+
+    @Select("SELECT * FROM student WHERE name LIKE CONCAT('%',#{name},'%') ORDER BY create_time DESC")
+    List<Student> selectAllByName(@Param("name") String name);
 }

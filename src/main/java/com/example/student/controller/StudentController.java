@@ -10,6 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+
 @Api(tags = "学生管理")
 @RestController
 @RequestMapping("/api/students")
@@ -29,6 +36,13 @@ public class StudentController {
     @DeleteMapping("/{id}")
     public Result<Void> delete(@PathVariable Long id) {
         studentService.deleteStudent(id);
+        return Result.success();
+    }
+
+    @ApiOperation("批量删除学生")
+    @DeleteMapping("/batch")
+    public Result<Void> batchDelete(@RequestBody List<Long> ids) {
+        studentService.batchDeleteStudents(ids);
         return Result.success();
     }
 
@@ -52,5 +66,31 @@ public class StudentController {
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int pageSize) {
         return Result.success(studentService.getStudentList(name, page, pageSize));
+    }
+
+    @ApiOperation("导出学生数据(CSV)")
+    @GetMapping("/export")
+    public void exportCsv(
+            @RequestParam(defaultValue = "") String name,
+            HttpServletResponse response) throws IOException {
+        List<Student> students = studentService.exportStudents(name);
+
+        String fileName = URLEncoder.encode("学生数据.csv", StandardCharsets.UTF_8.name());
+        response.setContentType("text/csv; charset=UTF-8");
+        response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
+
+        PrintWriter writer = response.getWriter();
+        writer.write("\uFEFF");
+        writer.write("ID,姓名,年龄,邮箱,创建时间\n");
+        for (Student s : students) {
+            writer.write(String.format("%d,%s,%d,%s,%s\n",
+                    s.getId(),
+                    s.getName() != null ? s.getName() : "",
+                    s.getAge() != null ? s.getAge() : 0,
+                    s.getEmail() != null ? s.getEmail() : "",
+                    s.getCreateTime() != null ? s.getCreateTime().toString() : ""
+            ));
+        }
+        writer.flush();
     }
 }

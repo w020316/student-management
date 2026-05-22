@@ -19,6 +19,12 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public void addStudent(Student student) {
+        if (student.getEmail() != null && !student.getEmail().isEmpty()) {
+            int count = studentMapper.countByEmail(student.getEmail());
+            if (count > 0) {
+                throw new BusinessException("邮箱已被使用，请更换");
+            }
+        }
         student.setCreateTime(LocalDateTime.now());
         studentMapper.insert(student);
     }
@@ -33,10 +39,24 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    public void batchDeleteStudents(List<Long> ids) {
+        if (ids == null || ids.isEmpty()) {
+            throw new BusinessException("请选择要删除的学生");
+        }
+        studentMapper.batchDelete(ids);
+    }
+
+    @Override
     public void updateStudent(Long id, Student student) {
         Student existing = studentMapper.selectById(id);
         if (existing == null) {
             throw new BusinessException("学生不存在，无法修改");
+        }
+        if (student.getEmail() != null && !student.getEmail().isEmpty()) {
+            int count = studentMapper.countByEmailExcludeId(student.getEmail(), id);
+            if (count > 0) {
+                throw new BusinessException("邮箱已被使用，请更换");
+            }
         }
         student.setId(id);
         student.setCreateTime(existing.getCreateTime());
@@ -61,5 +81,13 @@ public class StudentServiceImpl implements StudentService {
         List<Student> list = studentMapper.selectByPage(name, offset, pageSize);
         int total = studentMapper.selectCountByName(name);
         return new PageResult<>(list, total, page, pageSize);
+    }
+
+    @Override
+    public List<Student> exportStudents(String name) {
+        if (name == null) {
+            name = "";
+        }
+        return studentMapper.selectAllByName(name);
     }
 }
