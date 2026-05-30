@@ -268,8 +268,9 @@
         <div class="api-config" style="display:flex;align-items:center;gap:12px;padding:12px 20px;margin-bottom:24px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);animation:fadeDown 0.6s ease-out;">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--fg-muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
             <span style="font-size:13px;color:var(--fg-muted);white-space:nowrap;">API 地址</span>
-            <input type="text" id="apiInput" placeholder="http://localhost:8080" style="flex:1;padding:6px 12px;background:var(--bg-elevated);border:1px solid var(--border);border-radius:6px;color:var(--fg);font-size:13px;font-family:inherit;outline:none;" oninput="saveApiBase()">
+            <input type="text" id="apiInput" placeholder="http://localhost:8080" style="flex:1;padding:6px 12px;background:var(--bg-elevated);border:1px solid var(--border);border-radius:6px;color:var(--fg);font-size:13px;font-family:inherit;outline:none;transition:border-color 0.25s;" oninput="saveApiBase();delayedCheck();" onkeydown="if(event.key==='Enter'){event.preventDefault();checkConnection();}">
             <span id="connStatus" style="font-size:12px;color:var(--danger);white-space:nowrap;">未连接</span>
+            <button onclick="checkConnection()" class="btn btn-ghost btn-sm" id="connBtn">连接</button>
         </div>
 
         <header>
@@ -406,25 +407,50 @@
         function saveApiBase() {
             const v = document.getElementById('apiInput').value.trim();
             localStorage.setItem('api_base', v);
-            checkConnection();
+            showDisconnected();
+        }
+
+        let connectTimer = null;
+        function delayedCheck() {
+            clearTimeout(connectTimer);
+            connectTimer = setTimeout(() => checkConnection(), 800);
         }
 
         async function checkConnection() {
             const status = document.getElementById('connStatus');
+            const input = document.getElementById('apiInput');
+            status.textContent = '连接中...';
+            status.style.color = 'var(--accent)';
             try {
-                const res = await fetch(`${getApiBase()}/api/health`);
+                const res = await fetch(`${getApiBase()}/api/health`, { signal: AbortSignal.timeout(5000) });
                 const json = await res.json();
                 if (json.code === 200) {
                     status.textContent = '已连接';
                     status.style.color = 'var(--success)';
+                    input.style.borderColor = 'var(--success)';
+                    fetchStudents();
+                    fetchStats();
                 } else {
-                    status.textContent = '未连接';
-                    status.style.color = 'var(--danger)';
+                    showDisconnected();
                 }
             } catch (e) {
-                status.textContent = '未连接';
-                status.style.color = 'var(--danger)';
+                showDisconnected();
             }
+        }
+
+        function showDisconnected() {
+            const status = document.getElementById('connStatus');
+            const input = document.getElementById('apiInput');
+            status.textContent = '未连接';
+            status.style.color = 'var(--danger)';
+            input.style.borderColor = 'var(--danger)';
+        }
+
+        function apiFetch(url, options) {
+            return fetch(`${getApiBase()}${url}`, {
+                ...options,
+                headers: { ...(options && options.headers || {}), 'Content-Type': 'application/json' }
+            });
         }
 
         let currentPage = 1;
@@ -820,9 +846,6 @@
         const savedApi = localStorage.getItem('api_base');
         if (savedApi) document.getElementById('apiInput').value = savedApi;
         checkConnection();
-
-        fetchStudents();
-        fetchStats();
     </script>
 </body>
 </html>
