@@ -172,6 +172,11 @@
         .modal-actions { display:flex; justify-content:flex-end; gap:10px; margin-top:28px; }
         .confirm-text { font-size:15px; color:var(--fg-muted); line-height:1.6; margin-bottom:8px; }
         .confirm-name { color:var(--fg); font-weight:600; }
+        .detail-row { display:flex; align-items:center; padding:12px 0; border-bottom:1px solid var(--border); }
+        .detail-row:last-child { border-bottom:none; }
+        .detail-label { font-size:13px; color:var(--fg-muted); width:80px; flex-shrink:0; }
+        .detail-value { font-size:15px; color:var(--fg); font-weight:500; }
+        .detail-value.age-badge { background:var(--accent-dim); color:var(--accent); padding:2px 12px; border-radius:20px; font-size:13px; }
 
         .toast-container { position:fixed; top:24px; right:24px; z-index:2000; display:flex; flex-direction:column; gap:10px; }
         .toast { display:flex; align-items:center; gap:10px; padding:14px 20px; background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-sm); box-shadow:var(--shadow); font-size:14px; animation:slideInRight 0.3s ease-out; min-width:260px; }
@@ -287,6 +292,17 @@
         </div>
     </div>
 
+    <div class="modal-overlay" id="detailModal">
+        <div class="modal" style="max-width:540px">
+            <h2>学生详情</h2>
+            <div id="detailContent" style="display:flex;flex-direction:column;gap:18px;"></div>
+            <div class="modal-actions">
+                <button class="btn btn-ghost" onclick="closeDetailModal()">关闭</button>
+                <button class="btn btn-primary" id="detailEditBtn">编辑</button>
+            </div>
+        </div>
+    </div>
+
     <div class="toast-container" id="toastContainer"></div>
 
     <script>
@@ -365,7 +381,10 @@
                 if(j.code!==200){showToast(j.message||'请求失败','error');l.style.display='none';e.style.display='block';return}
                 const{list,total,page,ps}=j.data;l.style.display='none';
                 if(!list||!list.length){e.style.display='block';return}
-                list.forEach((s,i)=>{const sl=selectedIds.has(s.id),tr=document.createElement('tr');tr.className=sl?'selected':'';tr.style.animation=`fadeUp 0.3s ease-out ${i*0.04}s both`;tr.innerHTML=`<td class="checkbox-cell"><input type="checkbox" class="row-checkbox" data-id="${s.id}" ${sl?'checked':''} onchange="toggleRowSelect(this)"></td><td style="color:var(--fg-muted)">${s.id}</td><td class="student-name">${escapeHtml(s.name)}</td><td><span class="student-age">${s.age}</span></td><td class="student-email hide-mobile">${escapeHtml(s.email||'-')}</td><td class="student-time hide-mobile">${formatTime(s.createTime)}</td><td><div class="actions"><button class="btn btn-ghost btn-sm" onclick="openEditModal(${s.id},'${escapeHtml(s.name)}',${s.age},'${escapeHtml(s.email||'')}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>编辑</button><button class="btn btn-danger btn-sm" onclick="openDeleteModal(${s.id},'${escapeHtml(s.name)}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>删除</button></div></td>`;t.appendChild(tr)});
+                list.forEach((s,i)=>{const sl=selectedIds.has(s.id),tr=document.createElement('tr');tr.className=sl?'selected':'';tr.style.animation=`fadeUp 0.3s ease-out ${i*0.04}s both`;tr.innerHTML=`<td class="checkbox-cell"><input type="checkbox" class="row-checkbox" data-id="${s.id}" ${sl?'checked':''} onchange="toggleRowSelect(this)"></td><td style="color:var(--fg-muted)">${s.id}</td><td class="student-name">${escapeHtml(s.name)}</td><td><span class="student-age">${s.age}</span></td><td class="student-email hide-mobile">${escapeHtml(s.email||'-')}</td><td class="student-time hide-mobile">${formatTime(s.createTime)}</td><td><div class="actions"><button class="btn btn-info btn-sm" onclick="viewStudent(${s.id})">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+    详情
+</button><button class="btn btn-ghost btn-sm" onclick="openEditModal(${s.id},'${escapeHtml(s.name)}',${s.age},'${escapeHtml(s.email||'')}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>编辑</button><button class="btn btn-danger btn-sm" onclick="openDeleteModal(${s.id},'${escapeHtml(s.name)}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>删除</button></div></td>`;t.appendChild(tr)});
                 renderPagination(total,page,ps);
             }catch(err){l.style.display='none';e.style.display='block';showToast('网络请求失败: '+err.message,'error')}
         }
@@ -410,9 +429,34 @@
 
         async function fetchStats(){try{const r=await api('/api/stats');const j=await r.json();if(j.code===200&&j.data){document.getElementById('statTotal').textContent=j.data.totalStudents||0;document.getElementById('statAvgAge').textContent=j.data.averageAge?j.data.averageAge.toFixed(1):'-';document.getElementById('statMinor').textContent=j.data.minorCount||0;document.getElementById('statAdult').textContent=j.data.adultCount||0}}catch(e){}}
 
+        async function viewStudent(id) {
+            try {
+                const r = await api('/api/students/' + id);
+                const j = await r.json();
+                if (j.code !== 200) { showToast(j.message || '查询失败', 'error'); return; }
+                const s = j.data;
+                const content = document.getElementById('detailContent');
+                content.innerHTML = `
+                    <div class="detail-row"><span class="detail-label">ID</span><span class="detail-value" style="color:var(--fg-muted)">#${s.id}</span></div>
+                    <div class="detail-row"><span class="detail-label">姓名</span><span class="detail-value">${escapeHtml(s.name)}</span></div>
+                    <div class="detail-row"><span class="detail-label">年龄</span><span class="detail-value age-badge">${s.age} 岁</span></div>
+                    <div class="detail-row"><span class="detail-label">邮箱</span><span class="detail-value">${escapeHtml(s.email || '未填写')}</span></div>
+                    <div class="detail-row"><span class="detail-label">创建时间</span><span class="detail-value" style="font-size:13px;color:var(--fg-muted)">${formatTime(s.createTime)}</span></div>
+                `;
+                document.getElementById('detailEditBtn').onclick = function() {
+                    closeDetailModal();
+                    openEditModal(s.id, s.name, s.age, s.email || '');
+                };
+                document.getElementById('detailModal').classList.add('active');
+            } catch (e) { showToast('查询失败', 'error'); }
+        }
+
+        function closeDetailModal() { document.getElementById('detailModal').classList.remove('active'); }
+
         document.getElementById('formModal').addEventListener('click',function(e){if(e.target===this)closeFormModal()});
         document.getElementById('confirmModal').addEventListener('click',function(e){if(e.target===this)closeConfirmModal()});
-        document.addEventListener('keydown',function(e){if(e.key==='Escape'){closeFormModal();closeConfirmModal()}});
+        document.getElementById('detailModal').addEventListener('click',function(e){if(e.target===this)closeDetailModal()});
+        document.addEventListener('keydown',function(e){if(e.key==='Escape'){closeFormModal();closeConfirmModal();closeDetailModal()}});
         document.getElementById('apiInput').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();doConnect()}});
 
         const saved=localStorage.getItem('sm_api_base');
