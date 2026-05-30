@@ -29,68 +29,61 @@
             --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
             --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
         body {
             font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg);
-            color: var(--fg);
-            min-height: 100vh;
-            overflow-x: hidden;
+            background: var(--bg); color: var(--fg); min-height: 100vh; overflow-x: hidden;
         }
-
         body::before {
-            content: '';
-            position: fixed;
-            top: -50%; left: -50%;
-            width: 200%; height: 200%;
+            content: ''; position: fixed; top:-50%; left:-50%;
+            width:200%; height:200%;
             background: radial-gradient(ellipse at 20% 20%, rgba(232,168,56,0.04) 0%, transparent 50%),
                         radial-gradient(ellipse at 80% 80%, rgba(56,201,122,0.03) 0%, transparent 50%);
             pointer-events: none; z-index: 0;
         }
-
-        .app {
-            position: relative; z-index: 1;
-            max-width: 1200px; margin: 0 auto; padding: 40px 24px;
-        }
-
-        header { margin-bottom: 48px; animation: fadeDown 0.6s ease-out; }
+        .app { position:relative; z-index:1; max-width:1200px; margin:0 auto; padding:40px 24px; }
+        header { margin-bottom:48px; animation: fadeDown 0.6s ease-out; }
 
         @keyframes fadeDown { from { opacity:0; transform:translateY(-20px); } to { opacity:1; transform:translateY(0); } }
         @keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
-        @keyframes scaleIn { from { opacity:0; transform:scale(0.95); } to { opacity:1; transform:scale(1); } }
-        @keyframes slideInRight { from { opacity:0; transform:translateX(20px); } to { opacity:1; transform:translateX(0); } }
         @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes slideInRight { from { opacity:0; transform:translateX(20px); } to { opacity:1; transform:translateX(0); } }
+
+        .api-bar {
+            display:flex; align-items:center; gap:10px;
+            padding:14px 20px; margin-bottom:28px;
+            background:var(--bg-card); border:1px solid var(--border);
+            border-radius:var(--radius); animation:fadeDown 0.6s ease-out;
+            flex-wrap:wrap;
+        }
+        .api-bar-label { font-size:13px; color:var(--fg-muted); white-space:nowrap; display:flex; align-items:center; gap:6px; }
+        .api-bar-input {
+            flex:1; min-width:200px; padding:8px 14px;
+            background:var(--bg-elevated); border:1px solid var(--border);
+            border-radius:var(--radius-sm); color:var(--fg);
+            font-size:13px; font-family:inherit; outline:none; transition:border-color 0.25s;
+        }
+        .api-bar-input:focus { border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-dim); }
+        .api-bar-input.error { border-color:var(--danger); box-shadow:0 0 0 3px var(--danger-dim); }
+        .api-bar-input.success { border-color:var(--success); }
+        .api-bar-btn { padding:8px 18px; font-size:13px; cursor:pointer; white-space:nowrap; }
+        .api-status { font-size:12px; font-weight:600; white-space:nowrap; padding:4px 10px; border-radius:100px; transition:all 0.25s; }
+        .api-status.ok { background:var(--success-dim); color:var(--success); }
+        .api-status.fail { background:var(--danger-dim); color:var(--danger); }
+        .api-status.checking { background:var(--accent-dim); color:var(--accent); }
 
         .header-top { display:flex; align-items:center; gap:16px; margin-bottom:8px; }
-
         .logo-icon {
-            width:44px; height:44px;
-            background: linear-gradient(135deg, var(--accent), #d4922e);
+            width:44px; height:44px; background:linear-gradient(135deg, var(--accent), #d4922e);
             border-radius:12px; display:flex; align-items:center; justify-content:center;
             font-size:22px; color:#0f1117; font-weight:700;
-            box-shadow: 0 4px 16px rgba(232,168,56,0.3);
+            box-shadow:0 4px 16px rgba(232,168,56,0.3);
         }
-
-        header h1 {
-            font-family:'Noto Serif SC',serif; font-size:32px; font-weight:700;
-            letter-spacing:-0.02em;
-            background: linear-gradient(135deg, var(--fg) 0%, var(--fg-muted) 100%);
-            -webkit-background-clip:text; -webkit-text-fill-color:transparent;
-        }
-
+        header h1 { font-family:'Noto Serif SC',serif; font-size:32px; font-weight:700; letter-spacing:-0.02em; background:linear-gradient(135deg, var(--fg) 0%, var(--fg-muted) 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
         header p { color:var(--fg-muted); font-size:14px; margin-left:60px; }
 
-        .stats-grid {
-            display:grid; grid-template-columns:repeat(4,1fr);
-            gap:16px; margin-bottom:24px;
-            animation: fadeUp 0.6s ease-out 0.15s both;
-        }
-        .stat-card {
-            background:var(--bg-card); border:1px solid var(--border);
-            border-radius:var(--radius); padding:20px; transition:var(--transition);
-        }
+        .stats-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:24px; animation: fadeUp 0.6s ease-out 0.15s both; }
+        .stat-card { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); padding:20px; transition:var(--transition); }
         .stat-card:hover { border-color:var(--border-accent); transform:translateY(-2px); }
         .stat-label { font-size:12px; color:var(--fg-muted); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:8px; }
         .stat-value { font-size:28px; font-weight:700; font-family:'DM Sans',sans-serif; }
@@ -99,45 +92,25 @@
         .stat-value.danger { color:var(--danger); }
         .stat-value.muted { color:var(--fg-muted); }
 
-        .toolbar {
-            display:flex; align-items:center; gap:12px;
-            margin-bottom:24px; animation: fadeUp 0.6s ease-out 0.1s both;
-        }
-
+        .toolbar { display:flex; align-items:center; gap:12px; margin-bottom:24px; animation: fadeUp 0.6s ease-out 0.1s both; }
         .search-box { position:relative; flex:1; max-width:360px; }
         .search-box svg { position:absolute; left:14px; top:50%; transform:translateY(-50%); color:var(--fg-muted); width:18px; height:18px; }
         .search-box input {
-            width:100%; padding:10px 14px 10px 42px;
-            background:var(--bg-card); border:1px solid var(--border);
-            border-radius:var(--radius-sm); color:var(--fg); font-size:14px;
-            font-family:inherit; outline:none; transition:var(--transition);
+            width:100%; padding:10px 14px 10px 42px; background:var(--bg-card); border:1px solid var(--border);
+            border-radius:var(--radius-sm); color:var(--fg); font-size:14px; font-family:inherit; outline:none; transition:var(--transition);
         }
         .search-box input::placeholder { color:var(--fg-muted); }
         .search-box input:focus { border-color:var(--border-accent); box-shadow:0 0 0 3px var(--accent-dim); }
-
         .toolbar-right { display:flex; align-items:center; gap:8px; margin-left:auto; }
 
-        .batch-bar {
-            display:none; align-items:center; gap:12px;
-            padding:12px 20px; margin-bottom:16px;
-            background:var(--info-dim); border:1px solid rgba(91,156,245,0.25);
-            border-radius:var(--radius-sm); animation:fadeUp 0.3s ease-out;
-        }
+        .batch-bar { display:none; align-items:center; gap:12px; padding:12px 20px; margin-bottom:16px; background:var(--info-dim); border:1px solid rgba(91,156,245,0.25); border-radius:var(--radius-sm); animation:fadeUp 0.3s ease-out; }
         .batch-bar.active { display:flex; }
         .batch-info { font-size:14px; color:var(--info); font-weight:500; }
         .batch-actions { display:flex; gap:8px; margin-left:auto; }
 
-        .btn {
-            display:inline-flex; align-items:center; gap:8px;
-            padding:10px 20px; border:none; border-radius:var(--radius-sm);
-            font-size:14px; font-weight:500; font-family:inherit;
-            cursor:pointer; transition:var(--transition); white-space:nowrap;
-        }
+        .btn { display:inline-flex; align-items:center; gap:8px; padding:10px 20px; border:none; border-radius:var(--radius-sm); font-size:14px; font-weight:500; font-family:inherit; cursor:pointer; transition:var(--transition); white-space:nowrap; }
         .btn svg { width:16px; height:16px; }
-        .btn-primary {
-            background:linear-gradient(135deg, var(--accent), #d4922e);
-            color:#0f1117; box-shadow:0 2px 12px rgba(232,168,56,0.25);
-        }
+        .btn-primary { background:linear-gradient(135deg, var(--accent), #d4922e); color:#0f1117; box-shadow:0 2px 12px rgba(232,168,56,0.25); }
         .btn-primary:hover { background:linear-gradient(135deg, var(--accent-hover), var(--accent)); box-shadow:0 4px 20px rgba(232,168,56,0.35); transform:translateY(-1px); }
         .btn-ghost { background:transparent; color:var(--fg-muted); border:1px solid var(--border); }
         .btn-ghost:hover { color:var(--fg); border-color:rgba(255,255,255,0.15); background:rgba(255,255,255,0.03); }
@@ -148,12 +121,7 @@
         .btn-sm { padding:6px 12px; font-size:13px; }
         .btn-sm svg { width:14px; height:14px; }
 
-        .table-wrapper {
-            background:var(--bg-card); border:1px solid var(--border);
-            border-radius:var(--radius); overflow:hidden;
-            animation: fadeUp 0.6s ease-out 0.2s both;
-        }
-
+        .table-wrapper { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; animation: fadeUp 0.6s ease-out 0.2s both; }
         table { width:100%; border-collapse:collapse; }
         thead { background:var(--bg-elevated); }
         th { padding:14px 20px; text-align:left; font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:0.06em; color:var(--fg-muted); border-bottom:1px solid var(--border); }
@@ -162,21 +130,12 @@
         tbody tr { transition:var(--transition); }
         tbody tr:hover { background:rgba(255,255,255,0.02); }
         tbody tr.selected { background:var(--info-dim); }
-
         .checkbox-cell { width:40px; text-align:center; }
-        .checkbox-cell input[type="checkbox"] {
-            width:16px; height:16px; accent-color:var(--info); cursor:pointer;
-        }
-
+        .checkbox-cell input[type="checkbox"] { width:16px; height:16px; accent-color:var(--info); cursor:pointer; }
         .student-name { font-weight:600; color:var(--fg); }
         .student-email { color:var(--fg-muted); font-size:13px; }
-        .student-age {
-            display:inline-flex; align-items:center; justify-content:center;
-            background:var(--accent-dim); color:var(--accent);
-            padding:2px 10px; border-radius:20px; font-size:13px; font-weight:500;
-        }
+        .student-age { display:inline-flex; align-items:center; justify-content:center; background:var(--accent-dim); color:var(--accent); padding:2px 10px; border-radius:20px; font-size:13px; font-weight:500; }
         .student-time { color:var(--fg-muted); font-size:13px; }
-
         .actions { display:flex; gap:8px; }
 
         .empty-state { text-align:center; padding:80px 20px; color:var(--fg-muted); }
@@ -196,108 +155,69 @@
         .page-btn.active { background:var(--accent); color:#0f1117; border-color:var(--accent); font-weight:600; }
         .page-btn:disabled { opacity:0.3; cursor:not-allowed; }
 
-        .modal-overlay {
-            position:fixed; inset:0; background:rgba(0,0,0,0.6);
-            backdrop-filter:blur(4px); display:flex; align-items:center; justify-content:center;
-            z-index:1000; opacity:0; visibility:hidden; transition:var(--transition);
-        }
+        .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.6); backdrop-filter:blur(4px); display:flex; align-items:center; justify-content:center; z-index:1000; opacity:0; visibility:hidden; transition:var(--transition); }
         .modal-overlay.active { opacity:1; visibility:visible; }
-        .modal {
-            background:var(--bg-card); border:1px solid var(--border);
-            border-radius:16px; padding:32px; width:90%; max-width:480px;
-            box-shadow:var(--shadow); transform:scale(0.95) translateY(10px); transition:var(--transition);
-        }
+        .modal { background:var(--bg-card); border:1px solid var(--border); border-radius:16px; padding:32px; width:90%; max-width:480px; box-shadow:var(--shadow); transform:scale(0.95) translateY(10px); transition:var(--transition); }
         .modal-overlay.active .modal { transform:scale(1) translateY(0); }
         .modal h2 { font-family:'Noto Serif SC',serif; font-size:22px; font-weight:700; margin-bottom:24px; }
 
         .form-group { margin-bottom:18px; }
         .form-group label { display:block; font-size:13px; font-weight:500; color:var(--fg-muted); margin-bottom:6px; }
-        .form-group input {
-            width:100%; padding:10px 14px; background:var(--bg-elevated);
-            border:1px solid var(--border); border-radius:var(--radius-sm);
-            color:var(--fg); font-size:14px; font-family:inherit; outline:none; transition:var(--transition);
-        }
+        .form-group input { width:100%; padding:10px 14px; background:var(--bg-elevated); border:1px solid var(--border); border-radius:var(--radius-sm); color:var(--fg); font-size:14px; font-family:inherit; outline:none; transition:var(--transition); }
         .form-group input::placeholder { color:var(--fg-muted); opacity:0.5; }
         .form-group input:focus { border-color:var(--border-accent); box-shadow:0 0 0 3px var(--accent-dim); }
         .form-group input.error { border-color:rgba(232,84,84,0.5); box-shadow:0 0 0 3px var(--danger-dim); }
         .form-error { font-size:12px; color:var(--danger); margin-top:4px; display:none; }
         .form-error.show { display:block; }
-
         .modal-actions { display:flex; justify-content:flex-end; gap:10px; margin-top:28px; }
         .confirm-text { font-size:15px; color:var(--fg-muted); line-height:1.6; margin-bottom:8px; }
         .confirm-name { color:var(--fg); font-weight:600; }
 
         .toast-container { position:fixed; top:24px; right:24px; z-index:2000; display:flex; flex-direction:column; gap:10px; }
-        .toast {
-            display:flex; align-items:center; gap:10px; padding:14px 20px;
-            background:var(--bg-card); border:1px solid var(--border);
-            border-radius:var(--radius-sm); box-shadow:var(--shadow);
-            font-size:14px; animation:slideInRight 0.3s ease-out; min-width:260px;
-        }
+        .toast { display:flex; align-items:center; gap:10px; padding:14px 20px; background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-sm); box-shadow:var(--shadow); font-size:14px; animation:slideInRight 0.3s ease-out; min-width:260px; }
         .toast.success { border-color:rgba(56,201,122,0.3); }
         .toast.success svg { color:var(--success); }
         .toast.error { border-color:rgba(232,84,84,0.3); }
         .toast.error svg { color:var(--danger); }
         .toast svg { width:18px; height:18px; flex-shrink:0; }
         .toast.fade-out { opacity:0; transform:translateX(20px); transition:var(--transition); }
-
-        .loading-spinner {
-            display:inline-block; width:20px; height:20px;
-            border:2px solid var(--border); border-top-color:var(--accent);
-            border-radius:50%; animation:spin 0.6s linear infinite;
-        }
+        .loading-spinner { display:inline-block; width:20px; height:20px; border:2px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin 0.6s linear infinite; }
         .table-loading { text-align:center; padding:60px; }
 
         @media (max-width: 768px) {
-            .app { padding:20px 16px; }
-            header h1 { font-size:24px; }
-            .toolbar { flex-wrap:wrap; }
-            .search-box { max-width:100%; order:2; flex-basis:100%; }
-            .toolbar-right { order:1; }
-            th, td { padding:10px 8px; font-size:13px; }
-            .actions { flex-direction:column; gap:4px; }
-            .stats-grid { grid-template-columns:repeat(2,1fr); }
-            .modal { padding:24px; }
-            .batch-bar { flex-wrap:wrap; }
+            .app { padding:20px 16px; } header h1 { font-size:24px; }
+            .toolbar { flex-wrap:wrap; } .search-box { max-width:100%; order:2; flex-basis:100%; }
+            .toolbar-right { order:1; } th, td { padding:10px 8px; font-size:13px; }
+            .actions { flex-direction:column; gap:4px; } .stats-grid { grid-template-columns:repeat(2,1fr); }
+            .modal { padding:24px; } .batch-bar { flex-wrap:wrap; }
             .hide-mobile { display:none !important; }
+            .api-bar { padding:10px 14px; }
+            .api-status { font-size:11px; }
         }
     </style>
 </head>
 <body>
     <div class="app">
-        <div class="api-config" style="display:flex;align-items:center;gap:12px;padding:12px 20px;margin-bottom:24px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);animation:fadeDown 0.6s ease-out;">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--fg-muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-            <span style="font-size:13px;color:var(--fg-muted);white-space:nowrap;">API 地址</span>
-            <input type="text" id="apiInput" placeholder="http://localhost:8080" style="flex:1;padding:6px 12px;background:var(--bg-elevated);border:1px solid var(--border);border-radius:6px;color:var(--fg);font-size:13px;font-family:inherit;outline:none;transition:border-color 0.25s;" oninput="saveApiBase();delayedCheck();" onkeydown="if(event.key==='Enter'){event.preventDefault();checkConnection();}">
-            <span id="connStatus" style="font-size:12px;color:var(--danger);white-space:nowrap;">未连接</span>
-            <button onclick="checkConnection()" class="btn btn-ghost btn-sm" id="connBtn">连接</button>
+        <div class="api-bar">
+            <span class="api-bar-label">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                API 地址
+            </span>
+            <input type="text" id="apiInput" class="api-bar-input" placeholder="http://localhost:8080">
+            <button class="btn btn-primary api-bar-btn" onclick="doConnect()">连接</button>
+            <span id="connStatus" class="api-status fail">未连接</span>
         </div>
 
         <header>
-            <div class="header-top">
-                <div class="logo-icon">S</div>
-                <h1>学生信息管理系统</h1>
-            </div>
+            <div class="header-top"><div class="logo-icon">S</div><h1>学生信息管理系统</h1></div>
             <p>Student Information Management System</p>
         </header>
 
         <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-label">学生总数</div>
-                <div class="stat-value accent" id="statTotal">-</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">平均年龄</div>
-                <div class="stat-value success" id="statAvgAge">-</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">未成年</div>
-                <div class="stat-value danger" id="statMinor">-</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">已成年</div>
-                <div class="stat-value muted" id="statAdult">-</div>
-            </div>
+            <div class="stat-card"><div class="stat-label">学生总数</div><div class="stat-value accent" id="statTotal">-</div></div>
+            <div class="stat-card"><div class="stat-label">平均年龄</div><div class="stat-value success" id="statAvgAge">-</div></div>
+            <div class="stat-card"><div class="stat-label">未成年</div><div class="stat-value danger" id="statMinor">-</div></div>
+            <div class="stat-card"><div class="stat-label">已成年</div><div class="stat-value muted" id="statAdult">-</div></div>
         </div>
 
         <div class="toolbar">
@@ -334,28 +254,17 @@
                 <thead>
                     <tr>
                         <th class="checkbox-cell"><input type="checkbox" id="selectAll" onchange="toggleSelectAll()"></th>
-                        <th>ID</th>
-                        <th>姓名</th>
-                        <th>年龄</th>
-                        <th class="hide-mobile">邮箱</th>
-                        <th class="hide-mobile">创建时间</th>
-                        <th>操作</th>
+                        <th>ID</th><th>姓名</th><th>年龄</th><th class="hide-mobile">邮箱</th><th class="hide-mobile">创建时间</th><th>操作</th>
                     </tr>
                 </thead>
                 <tbody id="tableBody"></tbody>
             </table>
             <div id="emptyState" class="empty-state" style="display:none;">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                <p>暂无学生数据</p>
-                <span>点击「新增学生」添加第一条记录</span>
+                <p>暂无学生数据</p><span>点击「新增学生」添加第一条记录</span>
             </div>
-            <div id="tableLoading" class="table-loading" style="display:none;">
-                <div class="loading-spinner"></div>
-            </div>
-            <div id="pagination" class="pagination" style="display:none;">
-                <div class="pagination-info" id="paginationInfo"></div>
-                <div class="pagination-btns" id="paginationBtns"></div>
-            </div>
+            <div id="tableLoading" class="table-loading" style="display:none;"><div class="loading-spinner"></div></div>
+            <div id="pagination" class="pagination" style="display:none;"><div class="pagination-info" id="paginationInfo"></div><div class="pagination-btns" id="paginationBtns"></div></div>
         </div>
     </div>
 
@@ -363,25 +272,10 @@
         <div class="modal">
             <h2 id="formModalTitle">新增学生</h2>
             <input type="hidden" id="editId">
-            <div class="form-group">
-                <label>姓名</label>
-                <input type="text" id="formName" placeholder="请输入姓名">
-                <div class="form-error" id="nameError">姓名不能为空</div>
-            </div>
-            <div class="form-group">
-                <label>年龄</label>
-                <input type="number" id="formAge" placeholder="请输入年龄" min="1" max="150">
-                <div class="form-error" id="ageError">请输入有效年龄（1-150）</div>
-            </div>
-            <div class="form-group">
-                <label>邮箱</label>
-                <input type="email" id="formEmail" placeholder="请输入邮箱">
-                <div class="form-error" id="emailError">请输入有效的邮箱地址</div>
-            </div>
-            <div class="modal-actions">
-                <button class="btn btn-ghost" onclick="closeFormModal()">取消</button>
-                <button class="btn btn-primary" id="formSubmitBtn" onclick="submitForm()">确认新增</button>
-            </div>
+            <div class="form-group"><label>姓名</label><input type="text" id="formName" placeholder="请输入姓名"><div class="form-error" id="nameError">姓名不能为空</div></div>
+            <div class="form-group"><label>年龄</label><input type="number" id="formAge" placeholder="请输入年龄" min="1" max="150"><div class="form-error" id="ageError">请输入有效年龄（1-150）</div></div>
+            <div class="form-group"><label>邮箱</label><input type="email" id="formEmail" placeholder="请输入邮箱（选填）"><div class="form-error" id="emailError">请输入有效的邮箱地址</div></div>
+            <div class="modal-actions"><button class="btn btn-ghost" onclick="closeFormModal()">取消</button><button class="btn btn-primary" id="formSubmitBtn" onclick="submitForm()">确认新增</button></div>
         </div>
     </div>
 
@@ -389,10 +283,7 @@
         <div class="modal">
             <h2 id="confirmTitle">确认删除</h2>
             <p class="confirm-text" id="confirmText"></p>
-            <div class="modal-actions">
-                <button class="btn btn-ghost" onclick="closeConfirmModal()">取消</button>
-                <button class="btn btn-danger" id="confirmActionBtn" onclick="confirmAction()">确认删除</button>
-            </div>
+            <div class="modal-actions"><button class="btn btn-ghost" onclick="closeConfirmModal()">取消</button><button class="btn btn-danger" id="confirmActionBtn" onclick="confirmAction()">确认删除</button></div>
         </div>
     </div>
 
@@ -400,452 +291,133 @@
 
     <script>
         function getApiBase() {
-            const v = document.getElementById('apiInput').value.trim().replace(/\/+$/, '');
-            return v || '';
+            return document.getElementById('apiInput').value.trim().replace(/\/+$/, '') || '';
         }
 
-        function saveApiBase() {
-            const v = document.getElementById('apiInput').value.trim();
-            localStorage.setItem('api_base', v);
-            showDisconnected();
+        function setConnStatus(type, text) {
+            const el = document.getElementById('connStatus');
+            const inp = document.getElementById('apiInput');
+            el.className = 'api-status ' + type;
+            el.textContent = text;
+            if (type === 'ok') { inp.classList.remove('error'); inp.classList.add('success'); }
+            else if (type === 'fail') { inp.classList.add('error'); inp.classList.remove('success'); }
+            else { inp.classList.remove('error', 'success'); }
         }
 
-        let connectTimer = null;
-        function delayedCheck() {
-            clearTimeout(connectTimer);
-            connectTimer = setTimeout(() => checkConnection(), 800);
-        }
+        async function doConnect() {
+            setConnStatus('checking', '连接中...');
+            const base = getApiBase();
+            if (!base) { setConnStatus('fail', '请输入地址'); return; }
 
-        async function checkConnection() {
-            const status = document.getElementById('connStatus');
-            const input = document.getElementById('apiInput');
-            status.textContent = '连接中...';
-            status.style.color = 'var(--accent)';
             try {
-                const res = await fetch(`${getApiBase()}/api/health`, { signal: AbortSignal.timeout(5000) });
+                const res = await fetch(base + '/api/health');
                 const json = await res.json();
                 if (json.code === 200) {
-                    status.textContent = '已连接';
-                    status.style.color = 'var(--success)';
-                    input.style.borderColor = 'var(--success)';
+                    setConnStatus('ok', '已连接');
+                    localStorage.setItem('sm_api_base', base);
                     fetchStudents();
                     fetchStats();
                 } else {
-                    showDisconnected();
+                    setConnStatus('fail', '服务异常');
                 }
-            } catch (e) {
-                showDisconnected();
+            } catch(e) {
+                setConnStatus('fail', '连接失败');
+                showToast('无法连接到后端服务，请检查地址是否正确', 'error');
             }
         }
 
-        function showDisconnected() {
-            const status = document.getElementById('connStatus');
-            const input = document.getElementById('apiInput');
-            status.textContent = '未连接';
-            status.style.color = 'var(--danger)';
-            input.style.borderColor = 'var(--danger)';
+        let currentPage = 1, pageSize = 10, searchTimer = null, selectedIds = new Set(), confirmCallback = null;
+
+        function api(url, opts) {
+            const base = getApiBase();
+            return fetch(base + url, Object.assign({ headers: {'Content-Type':'application/json'}}, opts||{}));
         }
 
-        function apiFetch(url, options) {
-            return fetch(`${getApiBase()}${url}`, {
-                ...options,
-                headers: { ...(options && options.headers || {}), 'Content-Type': 'application/json' }
-            });
+        function showToast(msg, type='success') {
+            const c=document.getElementById('toastContainer'),t=document.createElement('div');
+            t.className='toast '+type;
+            t.innerHTML=(type==='success'?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>')+'<span>'+msg+'</span>';
+            c.appendChild(t);
+            setTimeout(()=>{t.classList.add('fade-out');setTimeout(()=>t.remove(),300)},3000);
         }
 
-        let currentPage = 1;
-        let pageSize = 10;
-        let searchTimer = null;
-        let selectedIds = new Set();
-        let confirmCallback = null;
+        function formatTime(dt){if(!dt)return'-';return dt.replace('T',' ').substring(0,19)}
+        function escapeHtml(s){if(!s)return'';return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;')}
 
-        function showToast(message, type = 'success') {
-            const container = document.getElementById('toastContainer');
-            const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
-            const icon = type === 'success'
-                ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>'
-                : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>';
-            toast.innerHTML = icon + `<span>${message}</span>`;
-            container.appendChild(toast);
-            setTimeout(() => {
-                toast.classList.add('fade-out');
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
+        function updateBatchBar(){
+            const b=document.getElementById('batchBar'),c=document.getElementById('selectedCount');
+            if(selectedIds.size>0){b.classList.add('active');c.textContent=selectedIds.size}else{b.classList.remove('active')}
+            document.getElementById('selectAll').checked=false;document.getElementById('selectAll').indeterminate=false;
+        }
+        function toggleSelectAll(){const c=document.getElementById('selectAll').checked;document.querySelectorAll('.row-checkbox').forEach(cb=>{const i=parseInt(cb.dataset.id);cb.checked=c;c?(selectedIds.add(i),cb.closest('tr').classList.add('selected')):(selectedIds.delete(i),cb.closest('tr').classList.remove('selected'))});updateBatchBar()}
+        function toggleRowSelect(cb){const i=parseInt(cb.dataset.id);cb.checked?(selectedIds.add(i),cb.closest('tr').classList.add('selected')):(selectedIds.delete(i),cb.closest('tr').classList.remove('selected'));updateBatchBar()}
+        function clearSelection(){selectedIds.clear();document.querySelectorAll('.row-checkbox').forEach(cb=>{cb.checked=false;cb.closest('tr').classList.remove('selected')});document.getElementById('selectAll').checked=false;updateBatchBar()}
+
+        function batchDeleteSelected(){if(!selectedIds.size)return;const c=selectedIds.size;document.getElementById('confirmTitle').textContent='批量删除确认';document.getElementById('confirmText').innerHTML=`确定要删除选中的 <span class="confirm-name">${c}</span> 名学生吗？此操作不可撤销。`;document.getElementById('confirmActionBtn').textContent='确认删除';confirmCallback=async()=>{try{const r=await api('/api/students/batch',{method:'DELETE',body:JSON.stringify(Array.from(selectedIds))});const j=await r.json();if(j.code===200){showToast('成功删除 '+c+' 名学生');clearSelection();fetchStudents();fetchStats()}else{showToast(j.message||'批量删除失败','error')}}catch(e){showToast('网络请求失败','error')}};document.getElementById('confirmModal').classList.add('active')}
+        function exportCsv(){const n=document.getElementById('searchInput').value.trim();window.open(getApiBase()+'/api/students/export?name='+encodeURIComponent(n),'_blank');showToast('正在导出...')}
+
+        async function fetchStudents(){
+            const n=document.getElementById('searchInput').value.trim(),l=document.getElementById('tableLoading'),t=document.getElementById('tableBody'),e=document.getElementById('emptyState'),p=document.getElementById('pagination');
+            l.style.display='block';t.innerHTML='';e.style.display='none';p.style.display='none';
+            try{
+                const r=await api('/api/students?'+new URLSearchParams({name:n,page:currentPage,pageSize}));
+                const j=await r.json();
+                if(j.code!==200){showToast(j.message||'请求失败','error');l.style.display='none';e.style.display='block';return}
+                const{list,total,page,ps}=j.data;l.style.display='none';
+                if(!list||!list.length){e.style.display='block';return}
+                list.forEach((s,i)=>{const sl=selectedIds.has(s.id),tr=document.createElement('tr');tr.className=sl?'selected':'';tr.style.animation=`fadeUp 0.3s ease-out ${i*0.04}s both`;tr.innerHTML=`<td class="checkbox-cell"><input type="checkbox" class="row-checkbox" data-id="${s.id}" ${sl?'checked':''} onchange="toggleRowSelect(this)"></td><td style="color:var(--fg-muted)">${s.id}</td><td class="student-name">${escapeHtml(s.name)}</td><td><span class="student-age">${s.age}</span></td><td class="student-email hide-mobile">${escapeHtml(s.email||'-')}</td><td class="student-time hide-mobile">${formatTime(s.createTime)}</td><td><div class="actions"><button class="btn btn-ghost btn-sm" onclick="openEditModal(${s.id},'${escapeHtml(s.name)}',${s.age},'${escapeHtml(s.email||'')}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>编辑</button><button class="btn btn-danger btn-sm" onclick="openDeleteModal(${s.id},'${escapeHtml(s.name)}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>删除</button></div></td>`;t.appendChild(tr)});
+                renderPagination(total,page,ps);
+            }catch(err){l.style.display='none';e.style.display='block';showToast('网络请求失败: '+err.message,'error')}
         }
 
-        function formatTime(dt) {
-            if (!dt) return '-';
-            return dt.replace('T', ' ').substring(0, 19);
+        function renderPagination(total,page,ps){
+            const tp=Math.ceil(total/ps);if(tp<=1)return;
+            const pg=document.getElementById('pagination'),inf=document.getElementById('paginationInfo'),btns=document.getElementById('paginationBtns');
+            pg.style.display='flex';inf.textContent=`显示 ${(page-1)*ps+1}-${Math.min(page*ps,total)} 条，共 ${total} 条`;btns.innerHTML='';
+            const pb=document.createElement('button');pb.className='page-btn';pb.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>';pb.disabled=page<=1;pb.onclick=()=>{currentPage=page-1;fetchStudents()};btns.appendChild(pb);
+            for(let i=Math.max(1,page-2);i<=Math.min(tp,page+2);i++)btns.appendChild(createPageBtn(i,page));
+            const nb=document.createElement('button');nb.className='page-btn';nb.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>';nb.disabled=page>=tp;nb.onclick=()=>{currentPage=page+1;fetchStudents()};btns.appendChild(nb);
+        }
+        function createPageBtn(n,a){const b=document.createElement('button');b.className='page-btn'+(n===a?' active':'');b.textContent=n;b.onclick=()=>{currentPage=n;fetchStudents()};return b}
+
+        function handleSearch(){clearTimeout(searchTimer);searchTimer=setTimeout(()=>{currentPage=1;fetchStudents()},300)}
+        function openAddModal(){document.getElementById('formModalTitle').textContent='新增学生';document.getElementById('formSubmitBtn').textContent='确认新增';document.getElementById('editId').value='';document.getElementById('formName').value='';document.getElementById('formAge').value='';document.getElementById('formEmail').value='';clearErrors();document.getElementById('formModal').classList.add('active')}
+        function openEditModal(id,name,age,email){document.getElementById('formModalTitle').textContent='编辑学生';document.getElementById('formSubmitBtn').textContent='保存修改';document.getElementById('editId').value=id;document.getElementById('formName').value=name;document.getElementById('formAge').value=age;document.getElementById('formEmail').value=email;clearErrors();document.getElementById('formModal').classList.add('active')}
+        function closeFormModal(){document.getElementById('formModal').classList.remove('active')}
+        function clearErrors(){document.querySelectorAll('.form-error').forEach(e=>e.classList.remove('show'));document.querySelectorAll('.form-group input').forEach(e=>e.classList.remove('error'))}
+
+        function validateForm(){
+            let v=true;const name=document.getElementById('formName').value.trim(),age=document.getElementById('formAge').value,email=document.getElementById('formEmail').value.trim();clearErrors();
+            if(!name){document.getElementById('nameError').classList.add('show');document.getElementById('formName').classList.add('error');v=false}
+            if(!age||age<1||age>150){document.getElementById('ageError').classList.add('show');document.getElementById('formAge').classList.add('error');v=false}
+            if(email&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){document.getElementById('emailError').classList.add('show');document.getElementById('formEmail').classList.add('error');v=false}
+            return v;
         }
 
-        function escapeHtml(str) {
-            if (!str) return '';
-            return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+        async function submitForm(){
+            if(!validateForm())return;
+            const eid=document.getElementById('editId').value,body={name:document.getElementById('formName').value.trim(),age:parseInt(document.getElementById('formAge').value),email:document.getElementById('formEmail').value.trim()||null};
+            try{
+                const r=eid?await api('/api/students/'+eid,{method:'PUT',body:JSON.stringify(body)}):await api('/api/students',{method:'POST',body:JSON.stringify(body)});
+                const j=await r.json();
+                if(j.code===200){showToast(eid?'修改成功':'新增成功');closeFormModal();fetchStudents();fetchStats()}else{showToast(j.message||'操作失败','error')}
+            }catch(e){showToast('网络请求失败: '+e.message,'error')}
         }
 
-        function updateBatchBar() {
-            const bar = document.getElementById('batchBar');
-            const count = document.getElementById('selectedCount');
-            if (selectedIds.size > 0) {
-                bar.classList.add('active');
-                count.textContent = selectedIds.size;
-            } else {
-                bar.classList.remove('active');
-            }
-            document.getElementById('selectAll').checked = false;
-            document.getElementById('selectAll').indeterminate = false;
-        }
+        function openDeleteModal(id,name){document.getElementById('confirmTitle').textContent='确认删除';document.getElementById('confirmText').innerHTML=`确定要删除学生 <span class="confirm-name">${escapeHtml(name)}</span> 吗？`;document.getElementById('confirmActionBtn').textContent='确认删除';confirmCallback=async()=>{try{const r=await api('/api/students/'+id,{method:'DELETE'});const j=await r.json();if(j.code===200){showToast('删除成功');fetchStudents();fetchStats()}else{showToast(j.message||'删除失败','error')}}catch(e){showToast('网络请求失败','error')}};document.getElementById('confirmModal').classList.add('active')}
+        function closeConfirmModal(){document.getElementById('confirmModal').classList.remove('active');confirmCallback=null}
+        async function confirmAction(){if(confirmCallback)await confirmCallback();closeConfirmModal()}
 
-        function toggleSelectAll() {
-            const checked = document.getElementById('selectAll').checked;
-            const checkboxes = document.querySelectorAll('.row-checkbox');
-            checkboxes.forEach(cb => {
-                const id = parseInt(cb.dataset.id);
-                cb.checked = checked;
-                if (checked) {
-                    selectedIds.add(id);
-                    cb.closest('tr').classList.add('selected');
-                } else {
-                    selectedIds.delete(id);
-                    cb.closest('tr').classList.remove('selected');
-                }
-            });
-            updateBatchBar();
-        }
+        async function fetchStats(){try{const r=await api('/api/stats');const j=await r.json();if(j.code===200&&j.data){document.getElementById('statTotal').textContent=j.data.totalStudents||0;document.getElementById('statAvgAge').textContent=j.data.averageAge?j.data.averageAge.toFixed(1):'-';document.getElementById('statMinor').textContent=j.data.minorCount||0;document.getElementById('statAdult').textContent=j.data.adultCount||0}}catch(e){}}
 
-        function toggleRowSelect(cb) {
-            const id = parseInt(cb.dataset.id);
-            if (cb.checked) {
-                selectedIds.add(id);
-                cb.closest('tr').classList.add('selected');
-            } else {
-                selectedIds.delete(id);
-                cb.closest('tr').classList.remove('selected');
-            }
-            updateBatchBar();
-        }
+        document.getElementById('formModal').addEventListener('click',function(e){if(e.target===this)closeFormModal()});
+        document.getElementById('confirmModal').addEventListener('click',function(e){if(e.target===this)closeConfirmModal()});
+        document.addEventListener('keydown',function(e){if(e.key==='Escape'){closeFormModal();closeConfirmModal()}});
+        document.getElementById('apiInput').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();doConnect()}});
 
-        function clearSelection() {
-            selectedIds.clear();
-            document.querySelectorAll('.row-checkbox').forEach(cb => {
-                cb.checked = false;
-                cb.closest('tr').classList.remove('selected');
-            });
-            document.getElementById('selectAll').checked = false;
-            updateBatchBar();
-        }
-
-        function batchDeleteSelected() {
-            if (selectedIds.size === 0) return;
-            const count = selectedIds.size;
-            document.getElementById('confirmTitle').textContent = '批量删除确认';
-            document.getElementById('confirmText').innerHTML = `确定要删除选中的 <span class="confirm-name">${count}</span> 名学生吗？此操作不可撤销。`;
-            document.getElementById('confirmActionBtn').textContent = '确认删除';
-            confirmCallback = async () => {
-                try {
-                    const res = await fetch(`${getApiBase()}/api/students/batch`, {
-                        method: 'DELETE',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(Array.from(selectedIds))
-                    });
-                    const json = await res.json();
-                    if (json.code === 200) {
-                        showToast(`成功删除 ${count} 名学生`);
-                        clearSelection();
-                        fetchStudents();
-                        fetchStats();
-                    } else {
-                        showToast(json.message || '批量删除失败', 'error');
-                    }
-                } catch (e) {
-                    showToast('网络请求失败', 'error');
-                }
-            };
-            document.getElementById('confirmModal').classList.add('active');
-        }
-
-        function exportCsv() {
-            const name = document.getElementById('searchInput').value.trim();
-            const params = new URLSearchParams({ name });
-            window.open(`${getApiBase()}/api/students/export?${params}`, '_blank');
-            showToast('正在导出 CSV 文件...');
-        }
-
-        async function fetchStudents() {
-            const name = document.getElementById('searchInput').value.trim();
-            const loading = document.getElementById('tableLoading');
-            const tbody = document.getElementById('tableBody');
-            const empty = document.getElementById('emptyState');
-            const pagination = document.getElementById('pagination');
-
-            loading.style.display = 'block';
-            tbody.innerHTML = '';
-            empty.style.display = 'none';
-            pagination.style.display = 'none';
-
-            try {
-                const params = new URLSearchParams({ name, page: currentPage, pageSize });
-                const res = await fetch(`${getApiBase()}/api/students?${params}`);
-                const json = await res.json();
-
-                if (json.code !== 200) {
-                    showToast(json.message || '请求失败', 'error');
-                    loading.style.display = 'none';
-                    empty.style.display = 'block';
-                    return;
-                }
-
-                const { list, total, page, pageSize: ps } = json.data;
-                loading.style.display = 'none';
-
-                if (!list || list.length === 0) {
-                    empty.style.display = 'block';
-                    return;
-                }
-
-                list.forEach((s, i) => {
-                    const isSelected = selectedIds.has(s.id);
-                    const tr = document.createElement('tr');
-                    tr.className = isSelected ? 'selected' : '';
-                    tr.style.animation = `fadeUp 0.3s ease-out ${i * 0.04}s both`;
-                    tr.innerHTML = `
-                        <td class="checkbox-cell"><input type="checkbox" class="row-checkbox" data-id="${s.id}" ${isSelected ? 'checked' : ''} onchange="toggleRowSelect(this)"></td>
-                        <td style="color:var(--fg-muted)">${s.id}</td>
-                        <td class="student-name">${escapeHtml(s.name)}</td>
-                        <td><span class="student-age">${s.age}</span></td>
-                        <td class="student-email hide-mobile">${escapeHtml(s.email || '-')}</td>
-                        <td class="student-time hide-mobile">${formatTime(s.createTime)}</td>
-                        <td>
-                            <div class="actions">
-                                <button class="btn btn-ghost btn-sm" onclick="openEditModal(${s.id},'${escapeHtml(s.name)}',${s.age},'${escapeHtml(s.email || '')}')">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                                    编辑
-                                </button>
-                                <button class="btn btn-danger btn-sm" onclick="openDeleteModal(${s.id},'${escapeHtml(s.name)}')">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-                                    删除
-                                </button>
-                            </div>
-                        </td>
-                    `;
-                    tbody.appendChild(tr);
-                });
-
-                renderPagination(total, page, ps);
-            } catch (e) {
-                loading.style.display = 'none';
-                empty.style.display = 'block';
-                showToast('网络请求失败', 'error');
-            }
-        }
-
-        function renderPagination(total, page, ps) {
-            const totalPages = Math.ceil(total / ps);
-            if (totalPages <= 1) return;
-
-            const pagination = document.getElementById('pagination');
-            const info = document.getElementById('paginationInfo');
-            const btns = document.getElementById('paginationBtns');
-
-            pagination.style.display = 'flex';
-            const start = (page - 1) * ps + 1;
-            const end = Math.min(page * ps, total);
-            info.textContent = `显示 ${start}-${end} 条，共 ${total} 条`;
-
-            btns.innerHTML = '';
-
-            const prevBtn = document.createElement('button');
-            prevBtn.className = 'page-btn';
-            prevBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>';
-            prevBtn.disabled = page <= 1;
-            prevBtn.onclick = () => { currentPage = page - 1; fetchStudents(); };
-            btns.appendChild(prevBtn);
-
-            const maxVisible = 5;
-            let startPage = Math.max(1, page - Math.floor(maxVisible / 2));
-            let endPage = Math.min(totalPages, startPage + maxVisible - 1);
-            if (endPage - startPage < maxVisible - 1) startPage = Math.max(1, endPage - maxVisible + 1);
-
-            if (startPage > 1) {
-                btns.appendChild(createPageBtn(1, page));
-                if (startPage > 2) {
-                    const dots = document.createElement('span');
-                    dots.textContent = '...';
-                    dots.style.cssText = 'color:var(--fg-muted);padding:0 4px;font-size:12px;';
-                    btns.appendChild(dots);
-                }
-            }
-
-            for (let i = startPage; i <= endPage; i++) btns.appendChild(createPageBtn(i, page));
-
-            if (endPage < totalPages) {
-                if (endPage < totalPages - 1) {
-                    const dots = document.createElement('span');
-                    dots.textContent = '...';
-                    dots.style.cssText = 'color:var(--fg-muted);padding:0 4px;font-size:12px;';
-                    btns.appendChild(dots);
-                }
-                btns.appendChild(createPageBtn(totalPages, page));
-            }
-
-            const nextBtn = document.createElement('button');
-            nextBtn.className = 'page-btn';
-            nextBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>';
-            nextBtn.disabled = page >= totalPages;
-            nextBtn.onclick = () => { currentPage = page + 1; fetchStudents(); };
-            btns.appendChild(nextBtn);
-        }
-
-        function createPageBtn(num, activePage) {
-            const btn = document.createElement('button');
-            btn.className = 'page-btn' + (num === activePage ? ' active' : '');
-            btn.textContent = num;
-            btn.onclick = () => { currentPage = num; fetchStudents(); };
-            return btn;
-        }
-
-        function handleSearch() {
-            clearTimeout(searchTimer);
-            searchTimer = setTimeout(() => { currentPage = 1; fetchStudents(); }, 300);
-        }
-
-        function openAddModal() {
-            document.getElementById('formModalTitle').textContent = '新增学生';
-            document.getElementById('formSubmitBtn').textContent = '确认新增';
-            document.getElementById('editId').value = '';
-            document.getElementById('formName').value = '';
-            document.getElementById('formAge').value = '';
-            document.getElementById('formEmail').value = '';
-            clearFormErrors();
-            document.getElementById('formModal').classList.add('active');
-        }
-
-        function openEditModal(id, name, age, email) {
-            document.getElementById('formModalTitle').textContent = '编辑学生';
-            document.getElementById('formSubmitBtn').textContent = '保存修改';
-            document.getElementById('editId').value = id;
-            document.getElementById('formName').value = name;
-            document.getElementById('formAge').value = age;
-            document.getElementById('formEmail').value = email;
-            clearFormErrors();
-            document.getElementById('formModal').classList.add('active');
-        }
-
-        function closeFormModal() { document.getElementById('formModal').classList.remove('active'); }
-
-        function clearFormErrors() {
-            document.querySelectorAll('.form-error').forEach(e => e.classList.remove('show'));
-            document.querySelectorAll('.form-group input').forEach(e => e.classList.remove('error'));
-        }
-
-        function validateForm() {
-            let valid = true;
-            const name = document.getElementById('formName').value.trim();
-            const age = document.getElementById('formAge').value;
-            const email = document.getElementById('formEmail').value.trim();
-            clearFormErrors();
-
-            if (!name) {
-                document.getElementById('nameError').classList.add('show');
-                document.getElementById('formName').classList.add('error');
-                valid = false;
-            }
-            if (!age || age < 1 || age > 150) {
-                document.getElementById('ageError').classList.add('show');
-                document.getElementById('formAge').classList.add('error');
-                valid = false;
-            }
-            if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-                document.getElementById('emailError').classList.add('show');
-                document.getElementById('formEmail').classList.add('error');
-                valid = false;
-            }
-            return valid;
-        }
-
-        async function submitForm() {
-            if (!validateForm()) return;
-            const editId = document.getElementById('editId').value;
-            const body = {
-                name: document.getElementById('formName').value.trim(),
-                age: parseInt(document.getElementById('formAge').value),
-                email: document.getElementById('formEmail').value.trim() || null
-            };
-
-            try {
-                let res;
-                if (editId) {
-                    res = await fetch(`${getApiBase()}/api/students/${editId}`, { method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body) });
-                } else {
-                    res = await fetch(`${getApiBase()}/api/students`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body) });
-                }
-                const json = await res.json();
-                if (json.code === 200) {
-                    showToast(editId ? '修改成功' : '新增成功');
-                    closeFormModal();
-                    fetchStudents();
-                    fetchStats();
-                } else {
-                    showToast(json.message || '操作失败', 'error');
-                }
-            } catch (e) {
-                showToast('网络请求失败', 'error');
-            }
-        }
-
-        function openDeleteModal(id, name) {
-            document.getElementById('confirmTitle').textContent = '确认删除';
-            document.getElementById('confirmText').innerHTML = `确定要删除学生 <span class="confirm-name">${escapeHtml(name)}</span> 吗？此操作不可撤销。`;
-            document.getElementById('confirmActionBtn').textContent = '确认删除';
-            confirmCallback = async () => {
-                try {
-                    const res = await fetch(`${getApiBase()}/api/students/${id}`, { method:'DELETE' });
-                    const json = await res.json();
-                    if (json.code === 200) {
-                        showToast('删除成功');
-                        fetchStudents();
-                        fetchStats();
-                    } else {
-                        showToast(json.message || '删除失败', 'error');
-                    }
-                } catch (e) {
-                    showToast('网络请求失败', 'error');
-                }
-            };
-            document.getElementById('confirmModal').classList.add('active');
-        }
-
-        function closeConfirmModal() {
-            document.getElementById('confirmModal').classList.remove('active');
-            confirmCallback = null;
-        }
-
-        async function confirmAction() {
-            if (confirmCallback) await confirmCallback();
-            closeConfirmModal();
-        }
-
-        async function fetchStats() {
-            try {
-                const res = await fetch(`${getApiBase()}/api/stats`);
-                const json = await res.json();
-                if (json.code === 200 && json.data) {
-                    document.getElementById('statTotal').textContent = json.data.totalStudents || 0;
-                    document.getElementById('statAvgAge').textContent = json.data.averageAge ? json.data.averageAge.toFixed(1) : '-';
-                    document.getElementById('statMinor').textContent = json.data.minorCount || 0;
-                    document.getElementById('statAdult').textContent = json.data.adultCount || 0;
-                }
-            } catch (e) {}
-        }
-
-        document.getElementById('formModal').addEventListener('click', function(e) { if (e.target === this) closeFormModal(); });
-        document.getElementById('confirmModal').addEventListener('click', function(e) { if (e.target === this) closeConfirmModal(); });
-        document.addEventListener('keydown', function(e) { if (e.key === 'Escape') { closeFormModal(); closeConfirmModal(); } });
-
-        const savedApi = localStorage.getItem('api_base');
-        if (savedApi) document.getElementById('apiInput').value = savedApi;
-        checkConnection();
+        const saved=localStorage.getItem('sm_api_base');
+        if(saved)document.getElementById('apiInput').value=saved;
+        doConnect();
     </script>
 </body>
 </html>
