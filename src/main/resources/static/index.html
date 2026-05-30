@@ -709,7 +709,7 @@
             const body = {
                 name: document.getElementById('formName').value.trim(),
                 age: parseInt(document.getElementById('formAge').value),
-                email: document.getElementById('formEmail').value.trim()
+                email: document.getElementById('formEmail').value.trim() || null
             };
 
             try {
